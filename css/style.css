@@ -1,1 +1,164 @@
+html {
+    background: #c34d86;
+    height: 100%;
+    width: 100%;
+    overflow: hidden
+}
 
+body {
+    background: url(../games-images/dots.png) repeat;
+    margin: 0;
+    height: 100%;
+    width: 100%
+}
+
+#spinner {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative
+}
+
+.img-loader {
+    width: 0;
+    height: 0;
+    overflow: hidden
+}
+
+#animation_container {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0
+}
+
+#dom_overlay_container {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    overflow: hidden
+}
+
+#midroll-container,
+#game-container {
+    height: 100%
+}
+
+.tinyloader {
+    position: relative;
+    width: 150px;
+    height: 27px;
+    top: 45%;
+    top: -webkit-calc(55% + 90px);
+    top: calc(55% + 90px);
+    left: 25%;
+    left: -webkit-calc(50% - 75px);
+    left: calc(50% - 75px);
+    background-color: #ffefff;
+    text-align: center;
+    border: 2px solid #ffefff;
+    border-radius: 2px
+}
+
+.tinyloader img {
+    position: absolute;
+    top: -259px;
+    left: -25px
+}
+
+.tinyloader:after {
+    content: "";
+    position: absolute;
+    background: #ff7ac5;
+    background: linear-gradient(to bottom, rgba(255, 122, 197, 1) 0%, rgba(178, 14, 107, 1) 100%);
+    top: 0;
+    left: 0;
+    height: 27px;
+    width: 0;
+    z-index: 0;
+    opacity: 1;
+    -webkit-transform-origin: 100% 0%;
+    transform-origin: 100% 0%;
+    -webkit-animation: tinyloader 10s ease-in-out infinite;
+    animation: tinyloader 10s ease-in-out infinite
+}
+
+.tinyloader:before {
+    content: "LOADING ...";
+    color: #ff7ac5;
+    font-family: Arial;
+    font-size: 16px;
+    position: absolute;
+    width: 100%;
+    height: 27px;
+    line-height: 27px;
+    left: 0;
+    top: 0
+}
+
+@-webkit-keyframes tinyloader {
+    0% {
+        width: 0
+    }
+    70% {
+        width: 100%;
+        opacity: 1
+    }
+    90% {
+        opacity: 0;
+        width: 100%
+    }
+    100% {
+        opacity: 0;
+        width: 0
+    }
+}
+
+@keyframes tinyloader {
+    0% {
+        width: 0
+    }
+    70% {
+        width: 100%;
+        opacity: 1
+    }
+    90% {
+        opacity: 0;
+        width: 100%
+    }
+    100% {
+        opacity: 0;
+        width: 0
+    }
+}
+
+body.boys {
+    background: 0 0
+}
+
+body.boys .tinyloader img {
+    display: none
+}
+
+body.boys .tinyloader:after {
+    background: linear-gradient(to bottom, #2e8cea 0%, #3357a1 100%)
+}
+
+body.boys .tinyloader:before {
+    color: #3357a1
+}
+
+body.phaser canvas {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%)
+}
