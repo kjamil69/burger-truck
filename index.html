@@ -1,0 +1,341 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, minimal-ui" />
+    <meta http-equiv="Content-Type" content="text/html" />
+    <meta name="robots" content="index,nofollow" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Burger Truck Frenzy USA</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css?x" />
+
+    <script src="games-api/functions.js?x"></script>
+    <script>
+        var debug = false;
+        var acc = '3';
+        var pid = 0;
+        var gid = 199;
+        var dev = 1;
+        var premiumGame = 1;
+        var endlessGame = 0;
+        var autoInitGame = true;
+        var isMobile = navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i);
+        var adBlocked = true;
+        var gameAtlasURL = 'images/game_atlas_' + (isMobile ? 'tiny' : '') + '.png';
+        var upNextGames = [{
+            s: 'miraculous-school-kiss',
+            n: 'Miraculous School Kiss'
+        }, {
+            s: 'jessies-winter-fashion',
+            n: 'Jessie\'s Winter Fashion'
+        }, {
+            s: 'ice-princess-real-dentist',
+            n: 'Ice Princess Real Dentist'
+        }, {
+            s: 'audrey-pony-daycare',
+            n: 'Audrey Pony Daycare'
+        }, {
+            s: 'girls-fix-it-amandas-ski-jet',
+            n: 'Girls Fix It: Amanda\'s Ski Jet'
+        }];
+        var imageLoaderCssData = 'data:image/png;base64,YTBkMGIzZDcwMjU2MzdjNjE2NjYwMmQzMDI1NjY3OTY0NzM2MTRjNmM2ZjYyNzQ2OTZkNmUyNzY2NjM0Mzc0NjE2MDJkMzAyNTY2Nzk2NDczNjE0YzZjNmY2Mjc1NjI3MDdlMjc2NjYzNDM3NDYxNjAyYjcwMjkyMDI5MmQ1NzI4N2Q2ZTI5NjA3NTY5NzcyMDJjMjcyZDZmNjM2ZTI0NzY2ZjYzNzQzMDc5NjY3NzIwMmMyNzJkNmY2MzZlMjAzMTM5NjM3OTYzNzcyMDJjMjcyZDZmNjM2ZTIwMzEzNTYwNzU2MDc3MjAyYzI3MjI3MjZlMmQ2ZjYzNmUyNTZlNjk2YzZlNmY2MzdmNjc2ZjZhNjk2YTc5NmI2NzIwMmMyNzI4N2Q2ZTI5NmE3OTZiNjcyMDJjMjcyNDc1NmU2ZTIzNzU2ZDYxNjc2OTY5NjE2NzcxNmI2NzIwMmMyNzJkNmY2MzZlMjMzOTYwNzU2OTczN2Y2NzY1NjU3YTY3MjAyYzI3MmY2MzZlMmQ2ZjYzNmUyMzMzMzczMzdmNjc2NTY1N2E2NzIwMmMyNzI0NzA3ZTIzNzE2NjYzN2Y2NzZmNmE2NzIwMmMyNzJkNmY2MzZlMmY2YzYxNjc2ZjZhNjcyMDJjMjcyZjYyN2UyOTZhNzk2ZDI5NjI3NTczNmY2YTY3MjAyYzI3Mjc2MjdmNmUyMzc1NmQ2MTY3NmQyNTYzNzI3ZjY4NjcyMDJjMjcyYzYwN2UyMTY5NjQ2ZTYxNmM2MTYyNzc2NzIwMmMyNzIyNzQ3ZTJkNmY2MzZlMjY3OTYyNzY2NzIwMmMyNzI0NzU2ZTZlMjI3MTZjNmU2NTc5N2Y2YzY1NmE3NTc3NmU2NTY3MjAyYzI3MmQ2ZjYzNmUyOTc4NmQ2MjcxNjcyYjU4Mjk0MjU1NTk3MTYyNzI3MTRlNjk2MDI4MjY2OTYwMjAyMDIwMmEwZDAwMjAyMDIwMmEwZDBiM2Q1MDIwMmI1MDJkMzAyMzcyNmQ2NTc4NjQ1NTZkNjE2NzZlNjk2MDIyNzE2Njc5MDAyYjNkNzcyZjJkNzc2NTdjNjM3YjdmMjM3NTZkNjE2NzZmMmQ2ZjYzNmUyNDZmNjA3OTcxNmM2MDdlMmQ2ZjJmMmEzMDc0NzQ3ODY3MjAyYTMyNmY2ZDYwMmMyNzJjNmQ2NDc4NmUyZDc3NjU3YzYzN2I3ZjI4Nzk2ZDZmMmQ2ZjYzNmUyNDZmNjA3OTcxNmM2MDdlMjc3Nzc3N2YyZjJhMzA3NDc0Nzg2NzIwMmEzYjYzNzU2NDZiNzAyZDMwMmQ1NDNiNTM3YzYyNzU1MjZkNjU3ODY0NzAyYjNkNzcyZjJkNzc2NTdjNjM3YjdmMjM3NTZkNjE2NzZmMjM3NTZkNjE2NzZlMjA3ZjYwN2UyZDZmMmYyYTMwNzQ3NDc4NjcyMDJhMzI2ZjZkNjAyYzI3MmM2ZDY0Nzg2ZTJkNzc2NTdjNjM3YjdmMjU2ZDYxNjc2ZjIzNzU2ZDYxNjc2ZTIwN2Y2MDdlMjc3Nzc3N2YyZjJhMzA3NDc0Nzg2NzIwMmEzYjYzNzU2NDZiNzAyZDMwMmQ1MzNiNTM3YzYyNzU1MjZkNjU3ODY0NzAyYjNkNzcyZjJkNzc2NTdjNjM3YjdmMjM3NTZkNjE2NzZmMmQ2ZjYzNmUyNzZjNjI3OTY3NmUyZDZmMmYyYTMwNzQ3NDc4NjcyMDJhMzI2ZjZkNjAyYzI3MmM2ZDY0Nzg2ZTJkNzc2NTdjNjM3YjdmMjU2ZDYxNjc2ZjJkNmY2MzZlMjc2YzYyNzk2NzZlMjc3Nzc3N2YyZjJhMzA3NDc0Nzg2NzIwMmEzYjYzNzU2NDZiNzAyZDMwMmQ1MjNiNTM3YzYyNzU1MjZkNjU3ODY0NzAyYjNkNzcyZjJkNzc2NTdjNjM3YjdmMjM3NTZkNjE2NzZmMmQ2ZjYzNmUyOTcxNmM2MDczN2M2Mjc5Njc2ZTJkNmYyZjJhMzA3NDc0Nzg2NzIwMmEzMjZmNmQ2MDJjMjcyZjJkNzc2NTdjNjM3YjdmMjU2ZDYxNjc2ZjJkNmY2MzZlMjk3MTZjNjA3MzdjNjI3OTY3NmUyNzc3Nzc3ZjJmMmEzMDc0NzQ3ODY3MjAyYTNiNjM3NTY0NmI3MDJkMzAyZDUxM2I1MzdjNjI3NTUyNmQ2NTc4NjQ3OTBhMGQwYjNkNWI1MDJkMzAyMzdjNjI3NTUyNmQ2NTc4NjQ3MDIyNzE2Njc5MGEwZDBiM2Q3MDNhMzIzNDdjMjAzYTMxMzQ3YjcwMmQzMDJjNjA3ZTJiNmM2NzYwMjkyOTJiNmM2NzYwMmU2OTYwMjcyYzYwNzcyODIxMjgyNjY5NjkwOTBhMGQwYjNkN2I3MDJkMzAyYjZjNjc2MDIyNzE2Njc5MGEwZDBiM2Q3NzIyNzU2NjdmNjU2ZDYxNjc2MDJjMmM2NTY2NzU2YzYyNzU2NDdlNjk2MDJjMjU2ZDYxNjc2ZTY5NjAyYzIyNzU2NDYxNmY2YzY1NjI3MDc3MjAyYTNlNmY2OTY0NzE2MzZmNmM0MzdjNjk2MTZlNjI2ZDY1Nzg2NDcwMmMyNzJiNjM2ZjZjNmU2NTcwMjAyYzJjNjU2Njc1NmM2Mjc1NjQ3ZTY5NjAyYzJmNjI3NDdlNjk2NzIwMmEzZTZmNjk2NDcxNjM2ZjZjNGM2YzZmNjI3NDY5NmQ2MDJjMjU2NTcyNzQ3MDJhMzU2Njc5NjQ3MzYxNGM2YzZmNjI3NDY5NmQ2MDJjMjU2MzdjNjE2NjYwMmEzNTY2Nzk2NDczNjE0YzZjNmY2Mjc1NjI3MDcwMmMyMDMyMzAyYTM3NmU2OTYwNzA3MTYzNjAyYzI1MzAyYTMyNzU2ZDY5NjQ1MDc5NmI2MzcwMmMyNTMxMzAyYTMyNzU2ZDY5NjQ1NTYzN2Y2YzYzNmY2NDc1NzE2MDJjMjM2MzYxNmEzMzYzNjE2MDJjMjQ2OTY3NmEzNDY5Njc2MDJjMjAzYTM0Njk2MDdiNzAyZDMwMjc2NjYzNDM3NDYxNjAyMjcxNjY3OTBhMGQwYjM3MjE2Mzc1N2QyOTdhN2U2NTYyNzY2ZDJiNjM2NTcyNzQ3ZDIyNzU2NzYyNzU3MjZkM2U2NzY5NjE2MDdkNjE2MzZmNWQ2NDc1NzYyZTZmNjk2NDcxNjU2MjczNmY1NTYyNzE2ODYzN2Y1NTNjNmQ2NDc4NmQzZDY1Nzk2NDY1NmQ2ZjVkNjQ3NTc2MjcyYjI5MjgyYzQyNTU1NDczN2Y2ODQ0NzU2NzZiMjcyZDM1NjM2Mjc1N2Y2MzdmNWQ2NDc1N2YzYzZkNjQ3ODZlMjE2Mzc1N2QyOTdhN2U2NTYyNzY2ZDJiNjM2NTcyNzQ3ZDIyNzU2NzYyNzU3MjZmMjU2ZDYxNjc2ZjIzNzU2ZDYxNjc2ZTIwN2Y2MDdlMjc3Nzc3N2YyZjJhMzA3NDc0Nzg2NzIwMmQzMDJjNDI1NTU1NjI3MTY4NjM3MDIyNzE2Njc5MGEwZDBiMzcyNzIwMmQzMDJjNDI1NTVmNjc2ZjZjNDI3NTZlNjQ3MjcxNjA3MDIyNzE2NjdmMmYyOTBhMGQwYjM3MjcyMDJkMzAyNTY3NjE2ZDY5NGY2NzZmNmM0Mjc1NmU2NDcyNzE2MDcwMjI3MTY2NzkwYTBkMDkwYTBkMGIzNzI3NmU2MDdlMjEzZjY3NmY2YzZmMjM3NTY3NjE2ZDY5NmQyMzc1NmQ2MTY3NmYyNTNjNmQ2NDc4NmYyNzIwMmQzMDJmNjc2ZjZjNDc2ZTY5NjQ2ZTYxNjI3MjYwMjI3MTY2NzkwYTBkMGIzNzI3NjA3YTZlMjEzMjc1NjQ2MTZmNmM2NTYyNzA3ZjIzNzU2NzYxNmQ2OTZkMjM3NTZkNjE2NzZmMjUzYzZkNjQ3ODZmMjcyMDJkMzAyNzYyNDI3NTY0NjE2ZjZjNjU2MjcwNzAyMjcxNjY3OTBhMGQwYjM3MmQ2ZjYzNmUyOTcxNmM2MDczN2M2Mjc5Njc2ZTI3Nzc3NzdmMmYyYTMwNzQ3NDc4NjcyMDJkMzAyYzQyNTU1NzZlNjk2NDZlNjE2MjcyNjAyMjcxNjY3OTBhMGQwYjM3MjIzZDRhNmU0MDM5NTQ1YTU5NzU1MjNlNDMzOTU0NWY0MzMxNWE2ZTRhNzk1NDRmNDIzNzZhN2U0MTMzNjQ0ZTQ5NzU1ZDZlNGE3OTVhNmE1MjMxNWQ2ZDRhNmE1YTdkNDIzMTVhNmU0YzZhNDQ1YTUzMzE0YTZlNGE2YTU0NWQ0MzNiNmE3ZTQ3Nzk1YTZhNTIzMTVhNmQ0YzZhNWE3ZDQyMzk1ZDZlNGI2YTRhNzk1YTc1NGE3ZDQ5N2Q0YTdlNDk3NTUyM2Q0Nzc5NDQ1YTVhNzE0YTZkNGM2ZTQ0NWQ0NzIwMmQzMDI4NmU2NDYzNjAyMjcxNjY3OTA=';
+
+        if (window.location != window.parent.location) {
+            if (!inArrayURI(['.'])) window.location = 'https://cdn.witchhut.com/html5/games/burger-truck-frenzy-usa/';
+            if (inArrayURI(['plippa.com'])) window.location = 'https://cdn.witchhut.com/';
+        }
+    </script>
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'analytics.js', 'ga');
+
+        ga('create', 'UA-707903-36', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <script>
+        window.onerror = function(message, source, lineno, colno, error) {
+            if (error) message = error.stack;
+            ga('send', 'event', 'game_events_' + gid, 'js_error', message);
+            return false;
+        }
+    </script>
+    <script src="games-api/init-witchhut-game-3.0p.js"></script>
+</head>
+
+<body class="x phaser">
+    <div id="game-container">
+        <a id="spinner" href="https://www.pop.games/game/burger-truck-frenzy-usa.html?utm_source=cdn.witchhut.com&utm_medium=html5_game&utm_campaign=burger-truck-frenzy-usa&utm_content=preload0" target="_blank" onclick="recordGameEvent('go_home');">
+            <div class="tinyloader"><img src="games-images/loader-girl.jpg" width="200" height="257" /></div>
+        </a>
+        <div class="img-loader"><img src="games-images/preloader1.jpg" /></div> <canvas id="canvas" width="800" height="600"></canvas>
+    </div>
+    <script type="text/javascript">
+        var gameSlug = 'burger-truck-frenzy-usa';
+        var gameName = 'Burger Truck Frenzy USA';
+        adsCfg.adxt = '2';
+        if (window.location.href.indexOf('upnext') > -1) adsCfg.prerollActive = false;
+        if ((adsCfg.prerollActive == false && adsCfg.acc == '4' && pid != 50) || window.location.href.indexOf('upnext') > -1) adsCfg.midrollLocation += ', mainmenu';
+    </script>
+    <script type="text/javascript" src="network-js/witch-afg/witchAfg.cfg.network.js?x"></script>
+    <script type="text/javascript" src="network-js/witch-afg/witchAfg.js?y0900"></script>
+    <script>
+        if (typeof wthPlayer == 'undefined') adBlocked = true;
+        else adBlocked = wthPlayer.adBlocked;
+    </script>
+    <script type="text/javascript">
+        if (!adBlocked)
+            recordGameEvent('open_page');
+        else
+            document.write('<style>#adBlocker {position:absolute;top:0;z-index:9999;width:100%;height:100%;background:#eb65a0 url(/network-js/witch-afg/ad-blocker.jpg) 50% 50% no-repeat; background-size: contain;}</style> <div id="adBlocker"></div>');
+    </script>
+    <script src="games-api/phaser.min_v2.7.5.js"></script>
+    <style>
+        #sharks {
+            font-family: "font-interfata";
+            visibility: hidden;
+        }
+
+        #cooper {
+            font-family: "CooperBlackStd";
+            visibility: hidden;
+        }
+
+        @font-face {
+            font-family: 'font-interfata';
+            font-style: normal;
+            src: url(assets/fonts/font-interfata.ttf);
+        }
+
+        @font-face {
+            font-family: 'CooperBlackStd';
+            font-style: black;
+            src: url(assets/fonts/font-levels-map.otf);
+        }
+    </style>
+    <div id="sharks">.</div>
+    <div id="cooper">.</div>
+    <script src="game.js"></script>
+    <script>
+        function readyToInitGame() {
+            if (window.innerHeight < 10) window.requestAnimationFrame(readyToInitGame);
+            else initGame();
+        }
+        if (!adsCfg.prerollActive && !adBlocked && autoInitGame) {
+            window.addEventListener('load', readyToInitGame, false);
+        }
+    </script>
+
+    <style>
+        @keyframes slideInDown {
+            0% {
+                transform: translate3d(0, -100%, 0);
+                visibility: visible
+            }
+            to {
+                transform: translateZ(0)
+            }
+        }
+
+        .slideInDown {
+            animation-name: slideInDown;
+            animation-duration: 1s;
+            animation-fill-mode: both
+        }
+
+        .upn-upnext {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: block;
+            vertical-align: top;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            z-index: 35;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            font-family: Arial;
+            font-size: 2.5vh;
+        }
+
+        .upn-upnext-box {
+            position: absolute;
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 30em;
+            height: 35em;
+        }
+
+        .upn-upnext-title {
+            display: block;
+            padding: 0.5em;
+            margin: auto;
+            text-align: center;
+            font-size: 150%;
+            font-weight: 500;
+        }
+
+        .upn-upnext-header {
+            display: block;
+            font-size: 140%;
+            text-align: center;
+            padding-bottom: 0.5em;
+            color: rgba(255, 255, 255, 0.7)
+        }
+
+        .upn-button {
+            border: none;
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+            text-align: inherit;
+            font-size: 100%;
+            font-family: inherit;
+            cursor: pointer;
+            line-height: inherit
+        }
+
+        .upn-button:focus,
+        .upn-button {
+            outline: 0
+        }
+
+        .upn-button::-moz-focus-inner {
+            padding: 0;
+            border: 0
+        }
+
+        .upn-upnext-cancel-button {
+            display: block;
+            float: none;
+            margin: 1em auto;
+            padding: 0.4em 1.2em;
+            border: 1px solid #c0c0c0;
+            color: #000;
+            background-color: rgba(255, 255, 255, 0.7);
+            font-size: 140%;
+            font-weight: 500;
+            text-transform: uppercase;
+            border-radius: 2px
+        }
+
+        .upn-upnext-cancel-button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .upn-upnext-autoplay-icon {
+            display: block;
+            width: 5em;
+            height: 5em;
+            margin: 0.5em auto;
+        }
+
+        .upn-svg-fill {
+            fill: #fff;
+        }
+
+        .upn-thumbnail-image {
+            width: 25em;
+            margin: auto;
+            display: block;
+        }
+    </style>
+    <div class="upn-upnext slideInDown" style="display: none;">
+        <span class="upn-upnext-box">
+<span class="upn-upnext-header">Up Next</span>
+        <a href="" class="upn-thumbnail-image-link"><img class="upn-thumbnail-image" src="" /></a>
+        <span class="upn-upnext-title"></span>
+        <a class="upn-upnext-autoplay-icon" href=""><svg height="100%" version="1.1" viewBox="0 0 72 72" width="100%"><circle class="upn-svg-autoplay-circle" cx="36" cy="36" fill="#fff" fill-opacity="0.3" r="31.5"></circle><circle class="upn-svg-autoplay-ring" cx="-36" cy="36" fill-opacity="0" r="33.5" stroke="#FFFFFF" stroke-dasharray="211" stroke-dashoffset="-210" stroke-width="4" transform="rotate(-90)"></circle><path class="upn-svg-fill" d="M 24,48 41,36 24,24 V 48 z M 44,24 v 24 h 4 V 24 h -4 z"></path></svg></a>
+        <button class="upn-upnext-cancel-button upn-button" tabindex="0" onclick="upNext.hide()">Cancel</button>
+        </span>
+    </div>
+    <script>
+        var upNext = {
+            start_offset: -210,
+            end_offset: -421,
+            autoPlayTimer: 8000, //8s
+            container: document.querySelector('.upn-upnext'),
+            pid: pid,
+            upNextGames: upNextGames.slice(0), //clone array
+            upNextTemp: upNextGames.slice(0), //clone array
+            gameName: '',
+            gameSlug: '',
+            replayWasClicked: false,
+
+            getUpNextGame: function() {
+                if (this.upNextGames.length == 0) return {};
+                //slice random game from buffer		
+                var randomIndex = Math.floor(Math.random() * this.upNextTemp.length);
+                var data = this.upNextTemp.splice(randomIndex, 1)[0];
+                if (this.upNextTemp.length == 0) this.upNextTemp = this.upNextGames.slice(0); //clone array - restart if empty	
+
+                this.gameName = data.n;
+                this.gameSlug = data.s
+            },
+
+            show: function() {
+                if (this.container.style.display == 'block') return
+
+                this.getUpNextGame(); //resets gameName and gameSlug
+
+                this.step = -(this.end_offset - this.start_offset) / this.autoPlayTimer * 10;
+                document.querySelector('.upn-upnext-title').innerHTML = this.gameName;
+                document.querySelector('.upn-thumbnail-image').src = '//www.girlsplay.com/game/' + this.gameSlug + '/thumb_400x300.jpg';
+                document.querySelector('.upn-thumbnail-image-link').href = document.querySelector('.upn-upnext-autoplay-icon').href = '//cdn.witchhut.com/html5/games/' + this.gameSlug + '/' + (this.pid ? (this.pid + '.html') : '') + '?utm_source=' + getHostURL() + '&utm_medium=upnext';
+                document.querySelector('.upn-svg-autoplay-ring').style.strokeDashoffset = this.start_offset;
+
+                this.replayWasClicked = false;
+                setTimeout(this.showContainer.bind(this), 2500);
+            },
+
+            showContainer: function() {
+                if (this.replayWasClicked == true) return;
+
+                this.container.style.display = 'block';
+                this.animateAutoplay(document.querySelector('.upn-svg-autoplay-ring'), this.start_offset);
+            },
+
+            hide: function() {
+                this.container.style.display = 'none';
+            },
+
+            animateAutoplay: function(e, len) {
+                len -= this.step;
+                if (len < this.end_offset) {
+                    len = this.end_offset;
+                    if (this.container.style.display == 'block')
+                        window.location = document.querySelector('.upn-thumbnail-image-link').href;
+                }
+                e.style.strokeDashoffset = len;
+                var self = this;
+                if (len > this.end_offset) setTimeout(function() {
+                    self.animateAutoplay(e, len);
+                }, 1);
+            }
+        }
+
+        function onGameOver() {
+            upNext.show();
+        }
+
+        function onMainMenu() {
+            upNext.replayWasClicked = true;
+        }
+    </script>
+</body>
+
+</html>
